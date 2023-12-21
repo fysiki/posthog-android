@@ -27,6 +27,7 @@ package com.posthog.android.payloads;
 
 import static com.posthog.android.internal.Utils.assertNotNull;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import com.posthog.android.Properties;
@@ -109,6 +110,24 @@ public class IdentifyPayload extends BasePayload {
     @Override
     Builder self() {
       return this;
+    }
+
+    @Override
+    @CheckResult
+    @NonNull
+    public IdentifyPayload build() {
+      IdentifyPayload build = super.build();
+
+      Date timestamp = build.timestamp();
+      if (timestamp == null) {
+        timestamp = new Date();
+      }
+
+      return realBuild(
+              build.messageId(),
+              timestamp,
+              build.properties(),
+              build.distinctId());
     }
   }
 }
